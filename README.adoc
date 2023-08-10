@@ -1,0 +1,44 @@
+= Encrypted PostgreSQL Password
+:Author:    Oliver Eikemeier
+:Email:     <eikemeier@fillmore-labs.com>
+:Date:      2023-08
+:Revision:  v0.1
+:toc: macro
+
+image:https://badge.buildkite.com/070c600f14498cd3d708e16c2df30e390d948c7fa9cd1a3fed.svg?branch=main[title="Buildkite build status",link=https://buildkite.com/fillmore-labs/postgresql-password/]
+
+toc::[]
+
+== Purpose
+
+.The PostgreSQL https://www.postgresql.org/docs/current/sql-createrole.html[documentation] of `+CREATE ROLE+` mentions:
+[quote]   
+----
+If the presented password string is already in MD5-encrypted or SCRAM-encrypted format, then it is stored as-is regardless of password_encryption (since the system cannot decrypt the specified encrypted password string, to encrypt it in a different format).
+----
+
+Which is not only useful during dump and restore, but also when initializing a new installation.
+
+This is a simple tool to create SCRAM-SHA-256 encrypted passwords.
+
+== Usage
+
+[source,shell]
+----
+./pgpasswd.sh user pass
+----
+
+outputs
+
+```sql
+CREATE ROLE "user" WITH
+  LOGIN
+  PASSWORD 'SCRAM-SHA-256$4096:...';
+```
+
+which can be fed directly into PostgreSQL.
+
+== References
+
+- https://www.rfc-editor.org/rfc/rfc7677[RFC 7677] SCRAM-SHA-256
+- https://www.rfc-editor.org/rfc/rfc5802#section-3[RFC 5802] SCRAM Algorithm Overview
