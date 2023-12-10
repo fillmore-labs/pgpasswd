@@ -6,11 +6,41 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
+	"html/template"
 	"log"
 	"os"
 
 	"golang.org/x/crypto/pbkdf2"
 )
+
+func main() {
+	if len(os.Args) != 3 {
+		log.Fatalf("Usage: %s <user> <password>\n", os.Args[0])
+	}
+
+	password, err := ScramSHA256Auth(os.Args[1])
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	tmpl, err := template.New("sql").Parse(sql)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	tmpl.Execute(os.Stdout, struct {
+		User     string
+		Password string
+	}{
+		User:     os.Args[1],
+		Password: password,
+	})
+}
+
+const sql = `CREATE ROLE "{{.User}}" WITH
+LOGIN
+PASSWORD '{{.Password}}';
+`
 
 const (
 	SaltSize  = 16
@@ -20,19 +50,6 @@ const (
 	clientKeyName   = "Client Key"
 	serverKeyName   = "Server Key"
 )
-
-func main() {
-	if len(os.Args) != 2 {
-		log.Fatalf("Usage: %s <password>\n", os.Args[0])
-	}
-
-	pass, err := ScramSHA256Auth(os.Args[1])
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println(pass)
-}
 
 func ScramSHA256Auth(password string) (string, error) {
 	salt := make([]byte, SaltSize)

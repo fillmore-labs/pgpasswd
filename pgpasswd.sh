@@ -5,10 +5,4 @@ if [ $# -ne 2 ]; then
     exit 1
 fi
 
-PASSOWRD=$(go run . "$2")
-
-cat << _SQL
-CREATE ROLE "$1" WITH
-  LOGIN
-  PASSWORD '$PASSOWRD';
-_SQL
+go run . "$1" "$2" "x"

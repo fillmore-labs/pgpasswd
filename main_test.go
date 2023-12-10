@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"testing"
 
-	main "pgpasswd"
+	main "github.com/fillmore-labs/pgpasswd"
 )
 
 const (
