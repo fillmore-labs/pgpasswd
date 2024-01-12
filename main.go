@@ -28,7 +28,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	tmpl.Execute(os.Stdout, struct {
+	_ = tmpl.Execute(os.Stdout, struct {
 		User     string
 		Password string
 	}{
