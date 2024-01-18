@@ -13,12 +13,19 @@ import (
 	"golang.org/x/crypto/pbkdf2"
 )
 
+const (
+	ArgProgram = iota
+	ArgUser
+	ArgPassword
+	ArgCount
+)
+
 func main() {
-	if len(os.Args) != 3 {
-		log.Fatalf("Usage: %s <user> <password>\n", os.Args[0])
+	if len(os.Args) != ArgCount {
+		log.Fatalf("Usage: %s <user> <password>\n", os.Args[ArgProgram])
 	}
 
-	password, err := ScramSHA256Auth(os.Args[1])
+	password, err := ScramSHA256Auth(os.Args[ArgPassword])
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -32,7 +39,7 @@ func main() {
 		User     string
 		Password string
 	}{
-		User:     os.Args[1],
+		User:     os.Args[ArgUser],
 		Password: password,
 	})
 }

@@ -22,7 +22,9 @@ const (
 	serverKeyPos
 )
 
-func TestComputeAuth(t *testing.T) {
+func TestComputeAuth(t *testing.T) { //nolint:cyclop
+	t.Parallel()
+
 	r := regexp.MustCompile(expr)
 	dec := base64.StdEncoding.DecodeString
 
