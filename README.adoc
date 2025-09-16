@@ -25,7 +25,7 @@ This is a simple tool to create SCRAM-SHA-256 encrypted passwords.
 
 [source,shell]
 ----
-./pgpasswd.sh user pass
+go run . user pass
 ----
 
 outputs

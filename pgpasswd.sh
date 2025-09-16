@@ -5,4 +5,4 @@ if [ $# -ne 2 ]; then
     exit 1
 fi
 
-go run . "$1" "$2" "x"
+go run . "$1" "$2"

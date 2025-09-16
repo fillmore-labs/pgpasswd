@@ -1,43 +1,122 @@
----
+version: "2"
+
 run:
   modules-download-mode: readonly
+
+formatters:
+  enable:
+    - gofumpt
+    - goimports
+
+  settings:
+    gofumpt:
+      extra-rules: true
+
 linters:
-  enable-all: true
-  disable:
-    # deprecated
-    - deadcode
-    - exhaustivestruct
-    - golint
-    - ifshort
-    - interfacer
-    - maligned
-    - nosnakecase
-    - scopelint
-    - structcheck
-    - varcheck
-    # disabled
-    - depguard
-    - exhaustruct
-    - forbidigo
-    - ireturn
-    - nonamedreturns
-    - varnamelen
-    - wrapcheck
-    - wsl
-linters-settings:
-  testifylint:
-    enable:
-      - bool-compare
-      - compares
-      - empty
-      - error-is-as
-      - error-nil
-      - expected-actual
-      - float-compare
-      # - go-require
-      - len
-      # - nil-compare
-      # - require-error
-      - suite-dont-use-pkg
-      - suite-extra-assert-call
-      - suite-thelper
+  enable:
+    # keep-sorted start
+    - copyloopvar
+    - errcheck
+    - errname
+    - exptostd
+    - gocheckcompilerdirectives
+    - gochecksumtype
+    - gocritic
+    - godot
+    - goheader
+    - gomoddirectives
+    - gosec
+    - govet
+    - iface
+    - inamedparam
+    - ineffassign
+    - intrange
+    - mirror
+    - misspell
+    - nlreturn
+    - nolintlint
+    - paralleltest
+    - perfsprint
+    - predeclared
+    - reassign
+    - revive
+    - sloglint
+    - staticcheck
+    - tagalign
+    - tagliatelle
+    - testableexamples
+    - thelper
+    - tparallel
+    - unconvert
+    - unparam
+    - unused
+    - usestdlibvars
+    - usetesting
+    - wastedassign
+    - wsl_v5
+    # keep-sorted end
+  settings:
+    # keep-sorted start
+    errcheck:
+      exclude-functions:
+        - (*os.File).Close
+        - (io/fs.File).Close
+    govet:
+      enable-all: true
+      disable:
+        - fieldalignment
+      settings:
+        shadow:
+          strict: true
+    nlreturn:
+      block-size: 2
+    predeclared:
+      ignore: ["new"]
+    revive:
+      rules:
+        # keep-sorted start
+        - name: atomic
+        - name: blank-imports
+        - name: context-as-argument
+        - name: context-keys-type
+        - name: dot-imports
+          exclude: ["TEST"]
+        - name: early-return
+          arguments:
+            - allow-jump: true
+        - name: empty-block
+        - name: error-naming
+        - name: error-return
+        - name: error-strings
+        - name: errorf
+        - name: exported
+        - name: increment-decrement
+        - name: indent-error-flow
+        - name: range
+        - name: receiver-naming
+        - name: redefines-builtin-id
+        - name: superfluous-else
+        - name: time-naming
+        - name: unexported-return
+        - name: unreachable-code
+        - name: unused-parameter
+        - name: var-declaration
+        - name: var-naming
+          # keep-sorted end
+    wsl_v5:
+      disable:
+        - assign
+        # keep-sorted end
+  exclusions:
+    rules:
+      - path: _test\.go$
+        linters:
+          - govet
+        text: "lostcancel"
+      - path: ^main\.go$
+        linters:
+          - gocheckcompilerdirectives
+        text: "go:debug"
+      - linters:
+          - govet
+        text: '^shadow: declaration of "(ctx|err|ok)" shadows declaration at line \d+$'

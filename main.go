@@ -6,9 +6,9 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
-	"html/template"
 	"log"
 	"os"
+	"text/template"
 
 	"golang.org/x/crypto/pbkdf2"
 )
@@ -35,13 +35,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	_ = tmpl.Execute(os.Stdout, struct {
+	if err := tmpl.Execute(os.Stdout, struct {
 		User     string
 		Password string
 	}{
 		User:     os.Args[ArgUser],
 		Password: password,
-	})
+	}); err != nil {
+		log.Fatal(err)
+	}
 }
 
 const sql = `CREATE ROLE "{{.User}}" WITH
